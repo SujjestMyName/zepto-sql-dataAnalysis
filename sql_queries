@@ -142,3 +142,46 @@ SUM(weightInGms * availableQuantity) AS total_weight
 FROM zepto
 GROUP BY category
 ORDER BY total_weight;
+-----------------------------------------------------------------
+--EDA--
+--DISTRIBUTION ANALYSIS
+--(price distribution)
+SELECT 
+  CASE 
+    WHEN discountedSellingPrice < 100 THEN 'Low'
+    WHEN discountedSellingPrice BETWEEN 100 AND 500 THEN 'Medium'
+    ELSE 'High'
+  END AS price_range,
+  COUNT(*)
+FROM zepto
+GROUP BY price_range;
+--(category distribution)
+SELECT category, COUNT(*) 
+FROM zepto
+GROUP BY category
+ORDER BY COUNT(*) DESC;
+--NOW
+--OUTLIER DETECTION
+SELECT *
+FROM zepto
+ORDER BY discountedSellingPrice DESC
+LIMIT 10;
+--NOW 
+-- Relationships Between Columns
+--(discount vs price)
+SELECT discountPercent, AVG(discountedSellingPrice)
+FROM zepto
+GROUP BY discountPercent
+ORDER BY discountPercent;
+--(stock vs sales potential)
+SELECT outOfStock, COUNT(*)
+FROM zepto
+GROUP BY outOfStock;
+--now 
+--Derived Insights (important)
+SELECT 
+  category,
+  AVG(discountPercent) AS avg_discount,
+  AVG(discountedSellingPrice) AS avg_price
+FROM zepto
+GROUP BY category;
