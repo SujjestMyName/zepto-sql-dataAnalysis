@@ -1,0 +1,38 @@
+--eda--
+--price distribution (shows how product are spread over different price raneg)
+select
+  case 
+   when discountedSellingPrice <100 then 'low'
+   when discountedSellingPrice between 100 and 500 then 'medium'
+   else 'high'
+  end as price_range,
+  count(*)
+from zepto 
+group by price_range;
+--category diistibution (which category dominatess)
+select category , count(*)
+from zepto
+group by category
+order by count(*) desc;
+--outlier detection (check extreme high prices and unrealistic values)
+select * 
+from zepto 
+order by discountedSellingPrice desc
+limit 10 ;
+-- relation beetween rows ( discount vs price and does higher discount =lower price)
+select discountPercent, avg(discountedSellingPrice)
+from zepto
+group by discountPercent
+order by discountPercent;
+--(stock vs sales potential)
+select outofstock,count(*)
+from zepto
+group by outofstock;
+--derived insights ( create logic and helps us to find which category gives highest discount and price strategy)
+select 
+  category,
+  avg(discountPercent) as avg_discount,
+  avg(discountedSellingPrice) as avg_price
+from zepto 
+group by category;
+  
